@@ -277,6 +277,7 @@ pr_where_1 (std::ostream& os, const char *fmt, ...)
 struct
 error_stack_frame
 {
+  std::string file;
   std::string name;
   int line;
   int column;
@@ -293,6 +294,7 @@ pr_where (std::ostream& os, const char *who,
 
   for (const auto& frm : frames)
     {
+      std::string fcn_file_name = frm.file;
       std::string fcn_name = frm.name;
       int line = frm.line;
       int column = frm.column;
@@ -300,13 +302,13 @@ pr_where (std::ostream& os, const char *who,
       if (line > 0)
         {
           if (column > 0)
-            pr_where_1 (os, "    %s at line %d column %d\n",
-                        fcn_name.c_str (), line, column);
+            pr_where_1 (os, "    %s at line %d column %d %s:%d:%d\n",
+                        fcn_name.c_str (), line, column, fcn_file_name.c_str(), line, column);
           else
-            pr_where_1 (os, "    %s at line %d\n", fcn_name.c_str (), line);
+            pr_where_1 (os, "    %s at line %d %s:%d\n", fcn_name.c_str (), line, fcn_file_name.c_str(), line);
         }
       else
-        pr_where_1 (os, "    %s\n", fcn_name.c_str ());
+        pr_where_1 (os, "   %s %s\n", fcn_name.c_str (), fcn_name.c_str ());
     }
 }
 
@@ -327,6 +329,7 @@ pr_where (std::ostream& os, const char *who)
     {
       error_stack_frame frame;
 
+      frame.file = frm.fcn_file_name ();
       frame.name = frm.fcn_name ();
       frame.line = frm.line ();
       frame.column = frm.column ();

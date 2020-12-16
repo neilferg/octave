@@ -4327,7 +4327,7 @@ namespace octave
     if (m_lexer.m_reading_fcn_file || m_lexer.m_reading_script_file
         || m_lexer.m_reading_classdef_file)
       output_buf << "parse error near line " << err_line
-                 << " of file " << m_lexer.m_fcn_file_full_name;
+                 << " of file " << m_lexer.m_fcn_file_full_name << ":" << err_line;
     else
       output_buf << "parse error:";
 
